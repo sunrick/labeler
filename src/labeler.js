@@ -15,6 +15,8 @@ export async function run() {
       return;
     }
 
+    throw 'sup'
+
     const client = new github.GitHub(token);
 
     const { data: pullRequest } = await client.pulls.get({
