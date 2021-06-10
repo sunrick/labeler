@@ -4,6 +4,8 @@ import * as yaml from "js-yaml";
 import { Minimatch } from "minimatch";
 
 export async function run() {
+  throw 'error'
+  
   try {
     const token = core.getInput("repo-token", { required: true });
     const configPath = core.getInput("configuration-path", { required: true });
@@ -14,8 +16,6 @@ export async function run() {
       console.log("Could not get pull request number from context, exiting");
       return;
     }
-
-    throw 'sup'
 
     const client = new github.GitHub(token);
 
