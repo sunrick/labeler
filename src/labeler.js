@@ -158,6 +158,7 @@ function isMatch(changedFile, matchers) {
   core.debug(`    matching patterns against file ${changedFile}`);
   for (const matcher of matchers) {
     core.debug(`   - ${printPattern(matcher)}`);
+    console.log(matcher)
     if (matcher.match(changedFile)) {
       return true;
     }

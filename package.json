@@ -4,7 +4,8 @@
   "description": "A github action labeler",
   "main": "dist/index.js",
   "scripts": {
-    "build": " ncc build src/main.js"
+    "build": "ncc build src/main.js",
+    "deploy": "npm run build && git add . && git commit -m 'deploy'"
   },
   "author": "",
   "license": "ISC",
