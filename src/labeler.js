@@ -144,10 +144,12 @@ export function allFilesMatch(
   const matchers = globs.map((g) => new Minimatch(g));
 
   for (const changedFile of changedFiles) {
+    console.log(changedFile)
     if (!isMatch(changedFile, matchers)) {
       return false
     }
   }
+  console.log('called true')
 
   return true;
 }
