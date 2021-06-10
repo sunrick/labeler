@@ -11553,6 +11553,35 @@ module.exports = require("zlib");;
 /******/ 	}
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__nccwpck_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__nccwpck_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__nccwpck_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__nccwpck_require__.o(definition, key) && !__nccwpck_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__nccwpck_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
@@ -11576,10 +11605,13 @@ __nccwpck_require__.r(__webpack_exports__);
 
 // EXTERNAL MODULE: ./node_modules/@actions/core/lib/core.js
 var core = __nccwpck_require__(5230);
+var core_default = /*#__PURE__*/__nccwpck_require__.n(core);
 // EXTERNAL MODULE: ./node_modules/@actions/github/lib/github.js
 var github = __nccwpck_require__(2876);
+var github_default = /*#__PURE__*/__nccwpck_require__.n(github);
 // EXTERNAL MODULE: ./node_modules/js-yaml/index.js
 var js_yaml = __nccwpck_require__(6989);
+var js_yaml_default = /*#__PURE__*/__nccwpck_require__.n(js_yaml);
 // EXTERNAL MODULE: ./node_modules/minimatch/minimatch.js
 var minimatch = __nccwpck_require__(2953);
 ;// CONCATENATED MODULE: ./src/labeler.js
@@ -11590,9 +11622,9 @@ var minimatch = __nccwpck_require__(2953);
 
 async function run() {
   try {
-    const token = core.getInput("repo-token", { required: true });
-    const configPath = core.getInput("configuration-path", { required: true });
-    const syncLabels = !!core.getInput("sync-labels", { required: false });
+    const token = core_default().getInput("repo-token", { required: true });
+    const configPath = core_default().getInput("configuration-path", { required: true });
+    const syncLabels = !!core_default().getInput("sync-labels", { required: false });
 
     const prNumber = getPrNumber();
     if (!prNumber) {
@@ -11600,15 +11632,15 @@ async function run() {
       return;
     }
 
-    const client = new github.GitHub(token);
+    const client = new (github_default()).GitHub(token);
 
     const { data: pullRequest } = await client.pulls.get({
-      owner: github.context.repo.owner,
-      repo: github.context.repo.repo,
+      owner: (github_default()).context.repo.owner,
+      repo: (github_default()).context.repo.repo,
       pull_number: prNumber,
     });
 
-    core.debug(`fetching changed files for pr #${prNumber}`);
+    core_default().debug(`fetching changed files for pr #${prNumber}`);
     const changedFiles = await getChangedFiles(client, prNumber);
     const labelGlobs = await getLabelGlobs(
       client,
@@ -11618,7 +11650,7 @@ async function run() {
     const labels = [];
     const labelsToRemove = [];
     for (const [label, globs] of labelGlobs.entries()) {
-      core.debug(`processing ${label}`);
+      core_default().debug(`processing ${label}`);
       if (checkGlobs(changedFiles, globs)) {
         labels.push(label);
       } else if (pullRequest.labels.find((l) => l.name === label)) {
@@ -11634,13 +11666,13 @@ async function run() {
       await removeLabels(client, prNumber, labelsToRemove);
     }
   } catch (error) {
-    core.error(error);
-    core.setFailed(error.message);
+    core_default().error(error);
+    core_default().setFailed(error.message);
   }
 }
 
 function getPrNumber() {
-  const pullRequest = github.context.payload.pull_request;
+  const pullRequest = (github_default()).context.payload.pull_request;
   if (!pullRequest) {
     return undefined;
   }
@@ -11653,17 +11685,17 @@ async function getChangedFiles(
   prNumber
 ) {
   const listFilesOptions = client.pulls.listFiles.endpoint.merge({
-    owner: github.context.repo.owner,
-    repo: github.context.repo.repo,
+    owner: (github_default()).context.repo.owner,
+    repo: (github_default()).context.repo.repo,
     pull_number: prNumber,
   });
 
   const listFilesResponse = await client.paginate(listFilesOptions);
   const changedFiles = listFilesResponse.map((f) => f.filename);
 
-  core.debug("found changed files:");
+  core_default().debug("found changed files:");
   for (const file of changedFiles) {
-    core.debug("  " + file);
+    core_default().debug("  " + file);
   }
 
   return changedFiles;
@@ -11679,7 +11711,7 @@ async function getLabelGlobs(
   );
 
   // loads (hopefully) a `{[label:string]: string | StringOrMatchConfig[]}`, but is `any`:
-  const configObject = js_yaml.safeLoad(configurationContent);
+  const configObject = js_yaml_default().safeLoad(configurationContent);
 
   // transform `any` => `Map<string,StringOrMatchConfig[]>` or throw if yaml is malformed:
   return getLabelGlobMapFromObject(configObject);
@@ -11690,10 +11722,10 @@ async function fetchContent(
   repoPath
 ) {
   const response = await client.repos.getContents({
-    owner: github.context.repo.owner,
-    repo: github.context.repo.repo,
+    owner: (github_default()).context.repo.owner,
+    repo: (github_default()).context.repo.repo,
     path: repoPath,
-    ref: github.context.sha,
+    ref: (github_default()).context.sha,
   });
 
   return Buffer.from(response.data.content, response.data.encoding).toString();
@@ -11737,7 +11769,7 @@ function checkGlobs(
   globs
 ) {
   for (const glob of globs) {
-    core.debug(` checking pattern ${JSON.stringify(glob)}`);
+    core_default().debug(` checking pattern ${JSON.stringify(glob)}`);
     const matchConfig = toMatchConfig(glob);
     if (checkMatch(changedFiles, matchConfig)) {
       return true;
@@ -11747,46 +11779,46 @@ function checkGlobs(
 }
 
 function isMatch(changedFile, matchers) {
-  core.debug(`    matching patterns against file ${changedFile}`);
+  core_default().debug(`    matching patterns against file ${changedFile}`);
   for (const matcher of matchers) {
-    core.debug(`   - ${printPattern(matcher)}`);
+    core_default().debug(`   - ${printPattern(matcher)}`);
     if (!matcher.match(changedFile)) {
-      core.debug(`   ${printPattern(matcher)} did not match`);
+      core_default().debug(`   ${printPattern(matcher)} did not match`);
       return false;
     }
   }
 
-  core.debug(`   all patterns matched`);
+  core_default().debug(`   all patterns matched`);
   return true;
 }
 
 // equivalent to "Array.some()" but expanded for debugging and clarity
 function checkAny(changedFiles, globs) {
   const matchers = globs.map((g) => new minimatch.Minimatch(g));
-  core.debug(`  checking "any" patterns`);
+  core_default().debug(`  checking "any" patterns`);
   for (const changedFile of changedFiles) {
     if (isMatch(changedFile, matchers)) {
-      core.debug(`  "any" patterns matched against ${changedFile}`);
+      core_default().debug(`  "any" patterns matched against ${changedFile}`);
       return true;
     }
   }
 
-  core.debug(`  "any" patterns did not match any files`);
+  core_default().debug(`  "any" patterns did not match any files`);
   return false;
 }
 
 // equivalent to "Array.every()" but expanded for debugging and clarity
 function checkAll(changedFiles, globs) {
   const matchers = globs.map((g) => new minimatch.Minimatch(g));
-  core.debug(` checking "all" patterns`);
+  core_default().debug(` checking "all" patterns`);
   for (const changedFile of changedFiles) {
     if (!isMatch(changedFile, matchers)) {
-      core.debug(`  "all" patterns did not match against ${changedFile}`);
+      core_default().debug(`  "all" patterns did not match against ${changedFile}`);
       return false;
     }
   }
 
-  core.debug(`  "all" patterns matched all files`);
+  core_default().debug(`  "all" patterns matched all files`);
   return true;
 }
 
@@ -11812,8 +11844,8 @@ async function addLabels(
   labels
 ) {
   await client.issues.addLabels({
-    owner: github.context.repo.owner,
-    repo: github.context.repo.repo,
+    owner: (github_default()).context.repo.owner,
+    repo: (github_default()).context.repo.repo,
     issue_number: prNumber,
     labels: labels,
   });
@@ -11827,8 +11859,8 @@ async function removeLabels(
   await Promise.all(
     labels.map((label) =>
       client.issues.removeLabel({
-        owner: github.context.repo.owner,
-        repo: github.context.repo.repo,
+        owner: (github_default()).context.repo.owner,
+        repo: (github_default()).context.repo.repo,
         issue_number: prNumber,
         name: label,
       })
