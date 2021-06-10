@@ -4,8 +4,6 @@ import * as yaml from "js-yaml";
 import { Minimatch } from "minimatch";
 
 export async function run() {
-  throw 'error'
-  
   try {
     const token = core.getInput("repo-token", { required: true });
     const configPath = core.getInput("configuration-path", { required: true });
@@ -143,7 +141,6 @@ export function allFilesMatch(
   changedFiles,
   globs
 ) {
-  return false
   const matchers = globs.map((g) => new Minimatch(g));
 
   for (const changedFile of changedFiles) {
