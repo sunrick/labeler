@@ -1,6 +1,6 @@
-import core from "@actions/core";
-import github from "@actions/github";
-import yaml from "js-yaml";
+import * as core from "@actions/core";
+import * as github from "@actions/github";
+import * as yaml from "js-yaml";
 import { Minimatch } from "minimatch";
 
 export async function run() {
