@@ -141,6 +141,7 @@ export function allFilesMatch(
   changedFiles,
   globs
 ) {
+  return false
   const matchers = globs.map((g) => new Minimatch(g));
 
   for (const changedFile of changedFiles) {
