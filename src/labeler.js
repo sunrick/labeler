@@ -144,7 +144,7 @@ export function allFilesMatch(
   const matchers = globs.map((g) => new Minimatch(g));
 
   for (const changedFile of changedFiles) {
-    console.log(changedFile)
+    
     if (!isMatch(changedFile, matchers)) {
       return false
     }
@@ -158,7 +158,10 @@ function isMatch(changedFile, matchers) {
   core.debug(`    matching patterns against file ${changedFile}`);
   for (const matcher of matchers) {
     core.debug(`   - ${printPattern(matcher)}`);
-    console.log(matcher)
+
+    console.log(changedFile)
+    console.log(matcher.match(changedFile))
+    
     if (matcher.match(changedFile)) {
       return true;
     }
