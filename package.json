@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "ncc build src/main.js",
-    "deploy": "npm run build && git add . && git commit -m 'deploy' && git push"
+    "deploy": "npm run build && git add dist && git commit -m 'Update production build' && git push"
   },
   "author": "",
   "license": "ISC",
