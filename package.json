@@ -1,5 +1,5 @@
 {
-  "name": "labeler",
+  "name": "only_labeler",
   "version": "1.0.0",
   "description": "A github action labeler",
   "main": "dist/index.js",
