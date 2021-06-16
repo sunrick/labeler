@@ -1,13 +1,12 @@
-
 name: 'Labeler'
-description: 'Automatically label new pull requests based on the paths of files being changed'
+description: 'Automatically add labels to pull requests if ALL committed changes ONLY match the globs provided. Useful for identifying non production changes to codebase.'
 author: 'sunrick'
 inputs:
   repo-token:
     description: 'The GITHUB_TOKEN secret'
   configuration-path:
     description: 'The path for the label configurations'
-    default: '.github/rickard.yml'
+    default: '.github/only_labeler.yml'
     required: false
   sync-labels:
     description: 'Whether or not to remove labels when matching files are reverted'
